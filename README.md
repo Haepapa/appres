@@ -1,0 +1,2 @@
+# appres
+Appwrite resource creator.
