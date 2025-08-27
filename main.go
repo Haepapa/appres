@@ -9,7 +9,7 @@ import (
 	"github.com/appwrite/sdk-for-go/id"
 	"github.com/appwrite/sdk-for-go/models"
 
-	"github.com/Haepapa/appres/internal/helper"
+	"appres/internal/helper"
 )
 
 // Export vrs
