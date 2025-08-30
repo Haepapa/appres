@@ -27,7 +27,7 @@ Create a `.env.local` file in your project root with your Appwrite configuration
 ```env
 NEXT_PUBLIC_APPWRITE_ENDPOINT=https://your-appwrite-endpoint.com/v1
 NEXT_PUBLIC_APPWRITE_PROJECT=your-project-id
-APPWRITE_API_KEY_RESDEF=your-api-key
+APPWRITE_API_KEY_RESDEF=your-api-key #api key with all Database scopes
 ```
 
 ### 2. Import the Package
