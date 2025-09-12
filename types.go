@@ -7,6 +7,9 @@ package appres
 // Supported attribute types:
 //   - "string": Text attributes with configurable size limits
 //   - "email": Email validation attributes
+//   - "integer": Integer attributes with configurable min/max constraints
+//   - "datetime": Date and time attributes
+//   - "boolean": Boolean (true/false) attributes
 //
 // Example usage:
 //
@@ -19,8 +22,19 @@ package appres
 //		Array:    false,
 //		Encrypt:  false,
 //	}
+//
+//	// Integer attribute example:
+//	intAttr := AttributeType{
+//		Type:     "integer",
+//		Name:     "age",
+//		Required: true,
+//		Min:      0,
+//		Max:      120,
+//		Default:  "18",
+//		Array:    false,
+//	}
 type AttributeType struct {
-	// Type specifies the attribute type. Supported values: "string", "email"
+	// Type specifies the attribute type. Supported values: "string", "email", "integer", "datetime", "boolean"
 	Type string
 	
 	// Name is the key/identifier for the attribute in the collection
@@ -43,4 +57,12 @@ type AttributeType struct {
 	// Encrypt determines whether the attribute value should be encrypted at rest
 	// Note: Only available for string attributes
 	Encrypt bool
+	
+	// Min is the minimum value for integer attributes (optional)
+	// If not set (0), no minimum constraint will be applied
+	Min float64
+	
+	// Max is the maximum value for integer attributes (optional)
+	// If not set (0), no maximum constraint will be applied
+	Max float64
 }

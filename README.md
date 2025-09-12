@@ -6,7 +6,12 @@ A Go package for creating and managing Appwrite resources programmatically. This
 
 - Create databases with duplicate checking
 - Create collections with duplicate checking  
-- Create string and email attributes with full configuration support
+- Create attributes with full configuration support for multiple types:
+  - String attributes with size, encryption, and array support
+  - Email attributes with validation and array support
+  - Integer attributes with min/max constraints and array support
+  - DateTime attributes with default values and array support
+  - Boolean attributes with default values and array support
 - Environment-based configuration
 - Comprehensive error handling and logging
 
@@ -118,6 +123,28 @@ func main() {
             Array:       false,
             Encrypt:     false,
         },
+        {
+            Type:        "integer",
+            Name:        "priority",
+            Required:    false,
+            Default:     "1",
+            Min:         1,
+            Max:         5,
+            Array:       false,
+        },
+        {
+            Type:        "datetime",
+            Name:        "created_at",
+            Required:    true,
+            Array:       false,
+        },
+        {
+            Type:        "boolean",
+            Name:        "is_resolved",
+            Required:    false,
+            Default:     "false",
+            Array:       false,
+        },
     }
 
     for _, att := range attVals {
@@ -185,6 +212,70 @@ if err != nil {
 }
 ```
 
+#### Attribute Examples
+
+Here are examples of creating different attribute types:
+
+```go
+// String attribute with encryption
+stringAttr := app.AttributeType{
+    Type:     "string",
+    Name:     "username",
+    Size:     50,
+    Required: true,
+    Default:  "",
+    Array:    false,
+    Encrypt:  true,
+}
+
+// Email attribute
+emailAttr := app.AttributeType{
+    Type:     "email",
+    Name:     "user_email",
+    Size:     255,
+    Required: true,
+    Default:  "",
+    Array:    false,
+}
+
+// Integer attribute with min/max constraints
+integerAttr := app.AttributeType{
+    Type:     "integer",
+    Name:     "age",
+    Required: false,
+    Default:  "18",
+    Min:      0,
+    Max:      120,
+    Array:    false,
+}
+
+// DateTime attribute
+datetimeAttr := app.AttributeType{
+    Type:     "datetime",
+    Name:     "created_at",
+    Required: true,
+    Array:    false,
+}
+
+// Boolean attribute
+booleanAttr := app.AttributeType{
+    Type:     "boolean",
+    Name:     "is_active",
+    Required: false,
+    Default:  "true",
+    Array:    false,
+}
+
+// Array attribute example
+arrayAttr := app.AttributeType{
+    Type:     "string",
+    Name:     "tags",
+    Size:     50,
+    Required: false,
+    Array:    true, // This creates an array of strings
+}
+```
+
 ### Types
 
 #### `AttributeType`
@@ -192,21 +283,43 @@ Defines the structure for creating attributes:
 
 ```go
 type AttributeType struct {
-    Type     string // "string" or "email" (more types coming soon)
+    Type     string // Supported: "string", "email", "integer", "datetime", "boolean"
     Name     string // Attribute key/name
-    Size     int    // Maximum size for the attribute
+    Size     int    // Maximum size (for string/email attributes)
     Required bool   // Whether the attribute is required
     Default  string // Default value
     Array    bool   // Whether the attribute is an array
-    Encrypt  bool   // Whether to encrypt the attribute
+    Encrypt  bool   // Whether to encrypt the attribute (string only)
+    Min      int    // Minimum value (for integer attributes)
+    Max      int    // Maximum value (for integer attributes)
 }
 ```
 
 ### Supported Attribute Types
 
-- **string**: Text attributes with configurable size
-- **email**: Email validation attributes
-- More types coming soon (integer, boolean, datetime, etc.)
+- **string**: Text attributes with configurable size, encryption, and array support
+  - `Size`: Maximum character length (required)
+  - `Encrypt`: Enable encryption at rest (optional)
+  - `Default`: Default string value (optional)
+  
+- **email**: Email validation attributes with array support
+  - `Size`: Maximum character length (required)
+  - `Default`: Default email value (optional)
+  
+- **integer**: Integer attributes with configurable min/max constraints and array support
+  - `Min`: Minimum allowed value (optional, 0 = no constraint)
+  - `Max`: Maximum allowed value (optional, 0 = no constraint)
+  - `Default`: Default integer value as string (optional)
+  
+- **datetime**: Date and time attributes with default values and array support
+  - `Default`: Default datetime value in ISO 8601 format (optional)
+  
+- **boolean**: Boolean (true/false) attributes with default values and array support
+  - `Default`: Default boolean value as string "true" or "false" (optional)
+
+**Common Configuration Options:**
+- `Required`: Whether the attribute must have a value (all types)
+- `Array`: Whether the attribute stores multiple values as an array (all types)
 
 ## Environment Variables
 

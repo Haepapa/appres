@@ -160,6 +160,9 @@ func CreateCollection(dbId string, name string) (*models.Collection, error) {
 //   - "string": Text attributes with configurable size, defaults, arrays, and encryption
 //   - "email": Email validation attributes with defaults and array support
 //
+// References:
+//   - Appwrite Documentation: https://appwrite.io/docs/references/cloud/server-go/databases
+//
 // Example:
 //
 //	attr := app.AttributeType{
@@ -213,6 +216,53 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			att.Required,
 			AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default),
 			AppwriteDatabase.WithCreateEmailAttributeArray(att.Array),
+		)
+		if err != nil {
+			log.Println("error creating attribute:", err)
+			return err
+		}
+		log.Println("attribute created with key:", newAtt.Key)
+		return nil
+	} else if att.Type == "integer" {
+		newAtt, err := AppwriteDatabase.CreateIntegerAttribute(
+			dbID,
+			colID,
+			att.Name,
+			att.Required,
+			databases.WithCreateIntegerAttributeMin(att.Min),
+			databases.WithCreateIntegerAttributeMax(att.Max),
+			databases.WithCreateIntegerAttributeDefault(att.Default),
+			databases.WithCreateIntegerAttributeArray(att.Array),
+		)
+		if err != nil {
+			log.Println("error creating attribute:", err)
+			return err
+		}
+		log.Println("attribute created with key:", newAtt.Key)
+		return nil
+	} else if att.Type == "datetime" {
+		newAtt, err := AppwriteDatabase.CreateDatetimeAttribute(
+			dbID,
+			colID,
+			att.Name,
+			att.Required,
+			databases.WithCreateDatetimeAttributeDefault(att.Default),
+			databases.WithCreateDatetimeAttributeArray(att.Array),
+		)
+		if err != nil {
+			log.Println("error creating attribute:", err)
+			return err
+		}
+		log.Println("attribute created with key:", newAtt.Key)
+		return nil
+	} else if att.Type == "boolean" {
+		newAtt, err := AppwriteDatabase.CreateBooleanAttribute(
+			dbID,
+			colID,
+			att.Name,
+			att.Required,
+			databases.WithCreateBooleanAttributeDefault(att.Default),
+			databases.WithCreateBooleanAttributeArray(att.Array),
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
