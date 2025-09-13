@@ -192,15 +192,20 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 	}
 	// Create an attribute
 	if att.Type == "string" {
+		var opts []databases.CreateStringAttributeOption
+		if !att.Required {
+			opts = append(opts, AppwriteDatabase.WithCreateStringAttributeDefault(att.Default))
+		}
+		opts = append(opts, AppwriteDatabase.WithCreateStringAttributeArray(att.Array))
+		opts = append(opts, AppwriteDatabase.WithCreateStringAttributeEncrypt(att.Encrypt))
+
 		newAtt, err := AppwriteDatabase.CreateStringAttribute(
 			dbID, 
 			colID, 
 			att.Name, 
 			att.Size, 
 			att.Required,
-			AppwriteDatabase.WithCreateStringAttributeDefault(att.Default),
-			AppwriteDatabase.WithCreateStringAttributeArray(att.Array),
-			AppwriteDatabase.WithCreateStringAttributeEncrypt(att.Encrypt),
+			opts...,
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
@@ -209,6 +214,11 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
 	} else if att.Type == "email" {
+		var opts []databases.CreateEmailAttributeOption
+		if !att.Required {
+			opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default))
+		}
+		opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateEmailAttribute(
 			dbID,
 			colID,
@@ -224,15 +234,19 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
 	} else if att.Type == "integer" {
+		var opts []databases.CreateIntegerAttributeOption
+		if !att.Required {
+			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeDefault(att.Default))
+		}
+		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min))
+		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMax(att.Max))
+		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateIntegerAttribute(
 			dbID,
 			colID,
 			att.Name,
 			att.Required,
-			databases.WithCreateIntegerAttributeMin(att.Min),
-			databases.WithCreateIntegerAttributeMax(att.Max),
-			databases.WithCreateIntegerAttributeDefault(att.Default),
-			databases.WithCreateIntegerAttributeArray(att.Array),
+			opts...,
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
@@ -241,13 +255,17 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
 	} else if att.Type == "datetime" {
+		var opts []databases.CreateDatetimeAttributeOption
+		if !att.Required {
+			opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeDefault(att.Default))
+		}
+		opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateDatetimeAttribute(
 			dbID,
 			colID,
 			att.Name,
 			att.Required,
-			databases.WithCreateDatetimeAttributeDefault(att.Default),
-			databases.WithCreateDatetimeAttributeArray(att.Array),
+			opts...,
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
@@ -256,13 +274,17 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
 	} else if att.Type == "boolean" {
+		var opts []databases.CreateBooleanAttributeOption
+		if !att.Required {
+			opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeDefault(att.Default))
+		}
+		opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateBooleanAttribute(
 			dbID,
 			colID,
 			att.Name,
 			att.Required,
-			databases.WithCreateBooleanAttributeDefault(att.Default),
-			databases.WithCreateBooleanAttributeArray(att.Array),
+			opts...,
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
