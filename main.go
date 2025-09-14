@@ -17,6 +17,7 @@ package appres
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/appwrite/sdk-for-go/appwrite"
 	"github.com/appwrite/sdk-for-go/databases"
@@ -190,11 +191,18 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			return nil
 		}
 	}
-	// Create an attribute
+	//----------------------------------------------------------------------------------------
+	// Create STRING attribute
+	//----------------------------------------------------------------------------------------
 	if att.Type == "string" {
+		if att.Default != nil {
+			if _, ok := att.Default.(string); !ok {
+				return fmt.Errorf("default value for string attribute must be a string")
+			}
+		}
 		var opts []databases.CreateStringAttributeOption
 		if !att.Required {
-			opts = append(opts, AppwriteDatabase.WithCreateStringAttributeDefault(att.Default))
+			opts = append(opts, AppwriteDatabase.WithCreateStringAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateStringAttributeArray(att.Array))
 		opts = append(opts, AppwriteDatabase.WithCreateStringAttributeEncrypt(att.Encrypt))
@@ -213,10 +221,18 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create EMAIL attribute
+	//----------------------------------------------------------------------------------------
 	} else if att.Type == "email" {
+		if att.Default != nil {
+			if _, ok := att.Default.(string); !ok {
+				return fmt.Errorf("default value for string attribute must be a string")
+			}
+		}
 		var opts []databases.CreateEmailAttributeOption
 		if !att.Required {
-			opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default))
+			opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateEmailAttribute(
@@ -224,8 +240,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			colID,
 			att.Name,
 			att.Required,
-			AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default),
-			AppwriteDatabase.WithCreateEmailAttributeArray(att.Array),
+			opts...
 		)
 		if err != nil {
 			log.Println("error creating attribute:", err)
@@ -233,13 +248,34 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create INTEGER attribute
+	//----------------------------------------------------------------------------------------
 	} else if att.Type == "integer" {
+		if att.Default != nil {
+			_, ok := att.Default.(int)
+			if !ok {
+				return fmt.Errorf("default value for integer attribute must be an int")
+			}
+		}
+		if att.Min != nil {
+			_, ok := att.Min.(int)
+			if !ok {
+				return fmt.Errorf("min value for integer attribute must be an int")
+			}
+		}
+		if att.Max != nil {
+			_, ok := att.Max.(int)
+			if !ok {
+				return fmt.Errorf("max value for integer attribute must be an int")
+			}
+		}
 		var opts []databases.CreateIntegerAttributeOption
 		if !att.Required {
-			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeDefault(att.Default))
+			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeDefault(att.Default.(int)))
 		}
-		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min))
-		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMax(att.Max))
+		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min.(int)))
+		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMax(att.Max.(int)))
 		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateIntegerAttribute(
 			dbID,
@@ -254,10 +290,23 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create DATETIME attribute
+	//----------------------------------------------------------------------------------------
 	} else if att.Type == "datetime" {
+		layout := time.RFC3339
+		if att.Default != nil {
+			s, ok := att.Default.(string)
+			if !ok {
+				return fmt.Errorf("default value for datetime attribute must be a string")
+			}
+			if _, err := time.Parse(layout, s); err != nil {
+				return fmt.Errorf("default value for datetime attribute must be a valid RFC3339 datetime string: %v", err)
+			}
+		}
 		var opts []databases.CreateDatetimeAttributeOption
 		if !att.Required {
-			opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeDefault(att.Default))
+			opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateDatetimeAttribute(
@@ -273,10 +322,18 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create BOOLEAN attribute
+	//----------------------------------------------------------------------------------------
 	} else if att.Type == "boolean" {
+		if att.Default != nil {
+			if _, ok := att.Default.(bool); !ok {
+				return fmt.Errorf("default value for boolean attribute must be a bool")
+			}
+		}
 		var opts []databases.CreateBooleanAttributeOption
 		if !att.Required {
-			opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeDefault(att.Default))
+			opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeDefault(att.Default.(bool)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateBooleanAttribute(

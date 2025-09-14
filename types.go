@@ -49,7 +49,7 @@ type AttributeType struct {
 	// Unique bool - not implemented in sdk (https://github.com/appwrite/sdk-for-go/blob/main/databases/databases.go)
 	
 	// Default is the default value assigned to the attribute if no value is provided
-	Default string
+	Default interface{}
 	
 	// Array indicates whether the attribute can store multiple values as an array
 	Array bool
@@ -60,9 +60,9 @@ type AttributeType struct {
 	
 	// Min is the minimum value for integer attributes (optional)
 	// If not set (0), no minimum constraint will be applied
-	Min float64
+	Min interface{}
 	
 	// Max is the maximum value for integer attributes (optional)
 	// If not set (0), no maximum constraint will be applied
-	Max float64
+	Max interface{}
 }
