@@ -201,7 +201,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			}
 		}
 		var opts []databases.CreateStringAttributeOption
-		if !att.Required {
+		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateStringAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateStringAttributeArray(att.Array))
@@ -231,7 +231,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			}
 		}
 		var opts []databases.CreateEmailAttributeOption
-		if !att.Required {
+		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateEmailAttributeArray(att.Array))
@@ -271,7 +271,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			}
 		}
 		var opts []databases.CreateIntegerAttributeOption
-		if !att.Required {
+		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeDefault(att.Default.(int)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min.(int)))
@@ -305,7 +305,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			}
 		}
 		var opts []databases.CreateDatetimeAttributeOption
-		if !att.Required {
+		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeDefault(att.Default.(string)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateDatetimeAttributeArray(att.Array))
@@ -332,7 +332,7 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 			}
 		}
 		var opts []databases.CreateBooleanAttributeOption
-		if !att.Required {
+		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeDefault(att.Default.(bool)))
 		}
 		opts = append(opts, AppwriteDatabase.WithCreateBooleanAttributeArray(att.Array))
