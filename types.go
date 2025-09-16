@@ -65,4 +65,14 @@ type AttributeType struct {
 	// Max is the maximum value for integer attributes (optional)
 	// If not set (0), no maximum constraint will be applied
 	Max interface{}
+
+	RelatedCollectionID string
+
+	RelationshipType string
+
+	TwoWay bool
+
+	TwoWayKey string
+
+	OnDelete string
 }

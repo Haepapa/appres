@@ -353,6 +353,28 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create RELATIONSHIP attribute
+	//----------------------------------------------------------------------------------------
+	} else if att.Type == "relationship" {
+		var opts []databases.CreateRelationshipAttributeOption
+		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeTwoWay(att.TwoWay))
+		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeKey(att.Name))
+		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeTwoWayKey(att.TwoWayKey))
+		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeOnDelete(att.OnDelete))
+		newAtt, err := AppwriteDatabase.CreateRelationshipAttribute(
+			dbID,
+			colID,
+			att.RelatedCollectionID,
+			att.RelationshipType,
+			opts...,
+		)
+		if err != nil {
+			log.Println("error creating attribute:", err)
+			return err
+		}
+		log.Println("attribute created with key:", newAtt.Key)
+		return nil
 	}
 	return fmt.Errorf("unsupported attribute type: %s", att.Type)
 }
