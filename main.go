@@ -274,8 +274,12 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		if !att.Required && att.Default != nil {
 			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeDefault(att.Default.(int)))
 		}
-		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min.(int)))
-		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMax(att.Max.(int)))
+		if att.Min != nil {
+			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMin(att.Min.(int)))
+		}
+		if att.Max != nil {
+			opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeMax(att.Max.(int)))
+		}
 		opts = append(opts, AppwriteDatabase.WithCreateIntegerAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateIntegerAttribute(
 			dbID,
