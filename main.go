@@ -359,9 +359,13 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 	} else if att.Type == "relationship" {
 		var opts []databases.CreateRelationshipAttributeOption
 		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeTwoWay(att.TwoWay))
-		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeKey(att.Name))
 		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeTwoWayKey(att.TwoWayKey))
-		opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeOnDelete(att.OnDelete))
+		if att.Name != "" {
+			opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeKey(att.Name))
+		}
+		if att.OnDelete != "" {
+			opts = append(opts, AppwriteDatabase.WithCreateRelationshipAttributeOnDelete(att.OnDelete))
+		}
 		newAtt, err := AppwriteDatabase.CreateRelationshipAttribute(
 			dbID,
 			colID,
