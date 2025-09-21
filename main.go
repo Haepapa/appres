@@ -381,6 +381,30 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 		}
 		log.Println("attribute created with key:", newAtt.Key)
 		return nil
+	//----------------------------------------------------------------------------------------
+	// Create URL attribute
+	//----------------------------------------------------------------------------------------
+	} else if att.Type == "url" {
+		var opts []databases.CreateUrlAttributeOption
+		if att.Default != "" {
+			opts = append(opts, AppwriteDatabase.WithCreateUrlAttributeDefault(att.Default.(string)))
+		}
+		if att.OnDelete != "" {
+			opts = append(opts, AppwriteDatabase.WithCreateUrlAttributeArray(att.Array))
+		}
+		newAtt, err := AppwriteDatabase.CreateUrlAttribute(
+			dbID,
+			colID,
+			att.Name,
+			att.Required,
+			opts...,
+		)
+		if err != nil {
+			log.Println("error creating attribute:", err)
+			return err
+		}
+		log.Println("attribute created with key:", newAtt.Key)
+		return nil
 	}
 	return fmt.Errorf("unsupported attribute type: %s", att.Type)
 }
