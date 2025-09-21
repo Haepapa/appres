@@ -386,12 +386,13 @@ func CreateAttribute(dbID string, colID string, att AttributeType) (error){
 	//----------------------------------------------------------------------------------------
 	} else if att.Type == "url" {
 		var opts []databases.CreateUrlAttributeOption
-		if att.Default != "" {
+		if att.Default != nil {
+			if _, ok := att.Default.(string); !ok {
+				return fmt.Errorf("default value for url attribute must be a string")
+			}
 			opts = append(opts, AppwriteDatabase.WithCreateUrlAttributeDefault(att.Default.(string)))
 		}
-		if att.OnDelete != "" {
-			opts = append(opts, AppwriteDatabase.WithCreateUrlAttributeArray(att.Array))
-		}
+		opts = append(opts, AppwriteDatabase.WithCreateUrlAttributeArray(att.Array))
 		newAtt, err := AppwriteDatabase.CreateUrlAttribute(
 			dbID,
 			colID,
