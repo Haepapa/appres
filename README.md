@@ -325,9 +325,9 @@ type AttributeType struct {
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `NEXT_PUBLIC_APPWRITE_ENDPOINT` | Your Appwrite server endpoint URL | Yes |
-| `NEXT_PUBLIC_APPWRITE_PROJECT` | Your Appwrite project ID | Yes |
-| `APPWRITE_API_KEY_RESDEF` | API key with appropriate permissions | Yes |
+| `APPWRITE_ENDPOINT_URL` | Your Appwrite server endpoint URL | Yes |
+| `APPWRITE_PROJECT_ID` | Your Appwrite project ID | Yes |
+| `APPWRITE_API_KEY_APPRES` | API key with appropriate permissions | Yes |
 
 ## Error Handling
 

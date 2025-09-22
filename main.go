@@ -51,9 +51,9 @@
 //
 // Before using this package, create a .env.local file in your project root with:
 //
-//	NEXT_PUBLIC_APPWRITE_ENDPOINT=https://your-appwrite-endpoint.com/v1
-//	NEXT_PUBLIC_APPWRITE_PROJECT=your-project-id
-//	APPWRITE_API_KEY_RESDEF=your-api-key
+//	APPWRITE_ENDPOINT_URL=https://your-appwrite-endpoint.com/v1
+//	APPWRITE_PROJECT_ID=your-project-id
+//	APPWRITE_API_KEY_APPRES=your-api-key
 //
 // The API key should have all permissions on database objects in Appwrite.
 package appres
