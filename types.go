@@ -76,3 +76,35 @@ type AttributeType struct {
 
 	OnDelete string
 }
+
+type BucketType struct {
+	// bucket name
+	Name        string
+
+	// An array of permission strings.
+	// e.g. read("any") grant read access to role "any"
+	Permissions []string
+
+	// When file security is enabled, users will be able to access files for which they have been granted either File or Bucket permissions.
+	// If file security is disabled, users can access files only if they have Bucket permissions. 
+	FileSecurity bool
+
+	// Is bucket enabled? When set to 'disabled', users cannot access the files in this bucket but Server SDKs with and API key can still access the bucket. 
+	// No files are lost when this is toggled.
+	Enabled     bool
+
+	// Maximum file size allowed in bytes. Maximum allowed value is 30MB.
+	MaxFileSize int
+
+	// Allowed file extensions. Maximum of 100 extensions are allowed, each 64 characters long.
+	AllowedFileExtensions []string
+
+	// Compression algorithm choosen for compression. Can be one of none, gzip, or zstd, For file size above 20MB compression is skipped even if it's enabled
+	Compression string
+
+	// Is encryption enabled? For file size above 20MB encryption is skipped even if it's enabled
+	Encryption  bool
+
+	// Is virus scanning enabled? For file size above 20MB AntiVirus scanning is skipped even if it's enabled
+	Antivirus   bool
+}
