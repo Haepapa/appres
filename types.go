@@ -99,7 +99,12 @@ type BucketType struct {
 	// Allowed file extensions. Maximum of 100 extensions are allowed, each 64 characters long.
 	AllowedFileExtensions []string
 
-	// Compression algorithm choosen for compression. Can be one of none, gzip, or zstd, For file size above 20MB compression is skipped even if it's enabled
+	// Compression algorithm choosen for compression. 
+	// Can be one of:
+	// - none
+	// - gzip
+	// - zstd
+	// For file size above 20MB compression is skipped even if it's enabled
 	Compression string
 
 	// Is encryption enabled? For file size above 20MB encryption is skipped even if it's enabled
