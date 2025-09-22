@@ -23,9 +23,9 @@ var (
 // It will terminate the program if the .env.local file cannot be loaded.
 //
 // Environment variables required:
-//	APPWRITE_ENDPOINT_URL=https://your-appwrite-endpoint.com/v1
-//	APPWRITE_PROJECT_ID=your-project-id
-//	APPWRITE_API_KEY_APPRES=your-api-key
+//   - APPWRITE_ENDPOINT_URL: The Appwrite server endpoint URL
+//   - APPWRITE_PROJECT_ID: The Appwrite project ID  
+//   - APPWRITE_API_KEY_APPRES: The API key with database and storage permissions
 //
 // Example:
 //

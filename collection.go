@@ -16,6 +16,9 @@ import (
 //   - dbId: The ID of the database where the collection should be created
 //   - name: The name of the collection to create
 //
+// Global Variables Used:
+//   - AppwriteDatabase: The initialized Appwrite database client
+//
 // Returns:
 //   - *models.Collection: Pointer to the created or existing collection
 //   - error: Any error that occurred during the operation

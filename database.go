@@ -15,6 +15,9 @@ import (
 // Parameters:
 //   - name: The name of the database to create
 //
+// Global Variables Used:
+//   - AppwriteDatabase: The initialized Appwrite database client
+//
 // Returns:
 //   - *models.Database: Pointer to the created or existing database
 //   - error: Any error that occurred during the operation

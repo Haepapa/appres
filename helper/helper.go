@@ -27,7 +27,7 @@ var (
 //
 // This function reads the following environment variables:
 //   - APPWRITE_ENDPOINT_URL: The Appwrite server endpoint URL
-//   - APPWRITE_PROJECT_ID: The Appwrite project ID
+//   - APPWRITE_PROJECT_ID: The Appwrite project ID  
 //   - APPWRITE_API_KEY_APPRES: The API key with appropriate permissions
 //
 // The function will terminate the program with log.Fatalf if the .env.local file

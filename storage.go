@@ -7,6 +7,33 @@ import (
 	"github.com/appwrite/sdk-for-go/models"
 	"github.com/appwrite/sdk-for-go/storage"
 )
+
+// CreateBucket creates a new storage bucket with the specified configuration.
+// It creates a bucket with customizable security, file size limits, and permissions.
+//
+// Parameters:
+//   - buc: BucketType struct containing the bucket configuration
+//
+// Global Variables Used:
+//   - AppwriteStorage: The initialized Appwrite storage client
+//
+// Returns:
+//   - *models.Bucket: Pointer to the created bucket
+//   - error: Any error that occurred during the operation
+//
+// Example:
+//
+//	bucket := appres.BucketType{
+//		Name:         "my-bucket",
+//		Enabled:      true,
+//		FileSecurity: true,
+//		MaxFileSize:  10000000, // 10MB
+//		Permissions:  []string{"read(\"any\")"},
+//	}
+//	buc, err := appres.CreateBucket(bucket)
+//	if err != nil {
+//		log.Fatal("Failed to create bucket:", err)
+//	}
 func CreateBucket(buc BucketType) (*models.Bucket, error) {
 
 	var opts []storage.CreateBucketOption

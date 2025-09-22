@@ -1,11 +1,12 @@
 // Package appres provides utilities for creating and managing Appwrite resources programmatically.
-// It simplifies the process of creating databases, collections, and attributes in your Appwrite backend.
+// It simplifies the process of creating various resources in your Appwrite backend.
 //
 // This package offers a simplified interface to the Appwrite Go SDK, providing functions to:
 //   - Initialize the Appwrite client
 //   - Create databases with duplicate checking
 //   - Create collections within databases
 //   - Create various types of attributes (string, email, integer, datetime, boolean, relationship, url)
+//   - Create storage buckets with security and file constraints
 //
 // All functions include built-in duplicate checking to prevent errors when resources already exist.
 //
@@ -55,5 +56,5 @@
 //	APPWRITE_PROJECT_ID=your-project-id
 //	APPWRITE_API_KEY_APPRES=your-api-key
 //
-// The API key should have all permissions on database objects in Appwrite.
+// The API key should have all permissions on database and storage objects in Appwrite.
 package appres

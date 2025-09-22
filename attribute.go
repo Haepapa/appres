@@ -9,25 +9,20 @@ import (
 )
 
 // CreateAttribute creates a new attribute in the specified collection or skips creation if it already exists.
-// It first checks if an attribute with the given name already exists in the collection to avoid duplicates.
-//
-// The function supports creating string and email attributes with full configuration options including
-// size limits, default values, array types, and encryption settings.
+// It checks for duplicates to avoid errors and supports all major attribute types.
 //
 // Parameters:
 //   - dbID: The ID of the database containing the collection
 //   - colID: The ID of the collection where the attribute should be created
 //   - att: AttributeType struct containing the attribute configuration
 //
+// Global Variables Used:
+//   - AppwriteDatabase: The initialized Appwrite database client
+//
 // Returns:
 //   - error: Any error that occurred during the operation, or nil if successful
 //
-// Supported attribute types:
-//   - "string": Text attributes with configurable size, defaults, arrays, and encryption
-//   - "email": Email validation attributes with defaults and array support
-//
-// References:
-//   - Appwrite Documentation: https://appwrite.io/docs/references/cloud/server-go/databases
+// Supported types: string, email, integer, datetime, boolean, relationship, url
 //
 // Example:
 //

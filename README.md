@@ -1,23 +1,17 @@
 # AppRes - Appwrite Resource Creator
 
-A Go package for creating and managing Appwrite resources programmatically. This package simplifies the process of creating databases, collections, and attributes in your Appwrite backend.
+A Go package for creating and managing Appwrite resources programmatically. Simplifies creating databases, collections, attributes, and storage buckets with built-in duplicate checking.
 
 ## Features
 
-- Create databases with duplicate checking
-- Create collections with duplicate checking  
-- Create attributes with full configuration support for multiple types:
-  - String attributes with size, encryption, and array support
-  - Email attributes with validation and array support
-  - Integer attributes with min/max constraints and array support
-  - DateTime attributes with default values and array support
-  - Boolean attributes with default values and array support
-- Environment-based configuration
-- Comprehensive error handling and logging
+- **Databases**: Create with duplicate checking
+- **Collections**: Create within databases with duplicate checking
+- **Attributes**: Support for string, email, integer, datetime, boolean, relationship, and url types
+- **Storage**: Create buckets with security and file constraints
+- **Environment-based configuration**
+- **Built-in error handling and logging**
 
 ## Installation
-
-Install the package using `go get`:
 
 ```bash
 go get github.com/Haepapa/appres
@@ -25,137 +19,74 @@ go get github.com/Haepapa/appres
 
 ## Setup
 
-### 1. Environment Configuration
-
-Create a `.env.local` file in your project root with your Appwrite configuration:
+Create a `.env.local` file in your project root with:
 
 ```bash
 APPWRITE_ENDPOINT_URL=https://your-appwrite-endpoint.com/v1
 APPWRITE_PROJECT_ID=your-project-id
-APPWRITE_API_KEY_APPRES=your-api-key #api key with all Database and Storage scopes
+APPWRITE_API_KEY_APPRES=your-api-key  # API key with Database and Storage scopes
 ```
 
-### 2. Import the Package
+## Import
 
 ```go
 import (
-    "crypto/tls"
     "log"
-    "net/http"
-    
     app "github.com/Haepapa/appres"
 )
 ```
 
 ## Usage
 
-### Basic Example
-
-Here's a complete example showing how to create a database, collection, and attributes:
-
 ```go
 package main
 
 import (
-    "crypto/tls"
     "log"
-    "net/http"
-    
     app "github.com/Haepapa/appres"
 )
 
 func main() {
-    // Suppress insecure warning (if using self-signed certificates)
-    http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-
     // Initialize Appwrite client
     app.Utils()
 
-    // Create a database
-    db, err := app.CreateDatabase("synergysquares")
+    // Create database
+    db, err := app.CreateDatabase("my-database")
     if err != nil {
-        log.Println("Error creating database:", err)
-        return
+        log.Fatal(err)
     }
 
-    // Create collection(s)
-    colContactUs, err := app.CreateCollection(db.Id, "contact_us")
+    // Create collection
+    col, err := app.CreateCollection(db.Id, "users")
     if err != nil {
-        log.Println("Error creating collection:", err)
-        return
+        log.Fatal(err)
     }
 
-    // Create attributes in collection(s)
-    attVals := []app.AttributeType{
-        {
-            Type:        "string",
-            Name:        "name",
-            Size:        100,
-            Required:    false,
-            Default:     "",
-            Array:       false,
-            Encrypt:     false,
-        },
-        {
-            Type:        "email",
-            Name:        "email",
-            Size:        200,
-            Required:    false,
-            Default:     "email@email.com",
-            Array:       false,
-            Encrypt:     false,
-        },
-        {
-            Type:        "string",
-            Name:        "subject",
-            Size:        200,
-            Required:    false,
-            Default:     "",
-            Array:       false,
-            Encrypt:     false,
-        },
-        {
-            Type:        "string",
-            Name:        "message",
-            Size:        5000,
-            Required:    false,
-            Default:     "",
-            Array:       false,
-            Encrypt:     false,
-        },
-        {
-            Type:        "integer",
-            Name:        "priority",
-            Required:    false,
-            Default:     "1",
-            Min:         1,
-            Max:         5,
-            Array:       false,
-        },
-        {
-            Type:        "datetime",
-            Name:        "created_at",
-            Required:    true,
-            Array:       false,
-        },
-        {
-            Type:        "boolean",
-            Name:        "is_resolved",
-            Required:    false,
-            Default:     "false",
-            Array:       false,
-        },
+    // Create attribute
+    attr := app.AttributeType{
+        Type:     "string",
+        Name:     "username",
+        Size:     50,
+        Required: true,
+    }
+    err = app.CreateAttribute(db.Id, col.Id, attr)
+    if err != nil {
+        log.Fatal(err)
     }
 
-    for _, att := range attVals {
-        err = app.CreateAttribute(db.Id, colContactUs.Id, att)
-        if err != nil {
-            log.Println("Error creating attribute:", err)
-            return
-        }
+    // Create storage bucket
+    bucket := app.BucketType{
+        Name:         "user-uploads",
+        Enabled:      true,
+        FileSecurity: true,
+        MaxFileSize:  10000000, // 10MB
+    }
+    buc, err := app.CreateBucket(bucket)
+    if err != nil {
+        log.Fatal(err)
     }
 
-    log.Println("Successfully created database, collection, and attributes!")
+    log.Println("Resources created successfully!")
 }
 ```
 
@@ -163,196 +94,46 @@ func main() {
 
 ### Functions
 
-#### `Utils()`
-Initializes the Appwrite client with environment variables. Must be called before using other functions.
+| Function | Description |
+|----------|-------------|
+| `Utils()` | Initialize Appwrite client (required first) |
+| `CreateDatabase(name)` | Create database with duplicate checking |
+| `CreateCollection(dbId, name)` | Create collection with duplicate checking |
+| `CreateAttribute(dbId, colId, attr)` | Create attribute with duplicate checking |
+| `CreateBucket(bucket)` | Create storage bucket |
 
-```go
-app.Utils()
-```
+### Attribute Types
 
-#### `CreateDatabase(name string) (*models.Database, error)`
-Creates a new database or returns existing one if it already exists.
+| Type | Fields | Example |
+|------|--------|---------|
+| `string` | `Size`, `Encrypt` | Text with optional encryption |
+| `email` | `Size` | Email validation |
+| `integer` | `Min`, `Max` | Numbers with constraints |
+| `datetime` | | Date and time values |
+| `boolean` | | True/false values |
+| `relationship` | `RelatedCollectionID`, `RelationshipType` | Link collections |
+| `url` | | URL validation |
 
-```go
-db, err := app.CreateDatabase("my-database")
-if err != nil {
-    log.Fatal(err)
-}
-fmt.Println("Database ID:", db.Id)
-```
-
-#### `CreateCollection(dbId string, name string) (*models.Collection, error)`
-Creates a new collection in the specified database or returns existing one if it already exists.
-
-```go
-col, err := app.CreateCollection(db.Id, "my-collection")
-if err != nil {
-    log.Fatal(err)
-}
-fmt.Println("Collection ID:", col.Id)
-```
-
-#### `CreateAttribute(dbID string, colID string, att AttributeType) error`
-Creates a new attribute in the specified collection or skips if it already exists.
-
-```go
-attr := app.AttributeType{
-    Type:     "string",
-    Name:     "title",
-    Size:     255,
-    Required: true,
-    Default:  "",
-    Array:    false,
-    Encrypt:  false,
-}
-
-err := app.CreateAttribute(db.Id, col.Id, attr)
-if err != nil {
-    log.Fatal(err)
-}
-```
-
-#### Attribute Examples
-
-Here are examples of creating different attribute types:
-
-```go
-// String attribute with encryption
-stringAttr := app.AttributeType{
-    Type:     "string",
-    Name:     "username",
-    Size:     50,
-    Required: true,
-    Default:  "",
-    Array:    false,
-    Encrypt:  true,
-}
-
-// Email attribute
-emailAttr := app.AttributeType{
-    Type:     "email",
-    Name:     "user_email",
-    Size:     255,
-    Required: true,
-    Default:  "",
-    Array:    false,
-}
-
-// Integer attribute with min/max constraints
-integerAttr := app.AttributeType{
-    Type:     "integer",
-    Name:     "age",
-    Required: false,
-    Default:  "18",
-    Min:      0,
-    Max:      120,
-    Array:    false,
-}
-
-// DateTime attribute
-datetimeAttr := app.AttributeType{
-    Type:     "datetime",
-    Name:     "created_at",
-    Required: true,
-    Array:    false,
-}
-
-// Boolean attribute
-booleanAttr := app.AttributeType{
-    Type:     "boolean",
-    Name:     "is_active",
-    Required: false,
-    Default:  "true",
-    Array:    false,
-}
-
-// Array attribute example
-arrayAttr := app.AttributeType{
-    Type:     "string",
-    Name:     "tags",
-    Size:     50,
-    Required: false,
-    Array:    true, // This creates an array of strings
-}
-```
-
-### Types
-
-#### `AttributeType`
-Defines the structure for creating attributes:
-
-```go
-type AttributeType struct {
-    Type     string // Supported: "string", "email", "integer", "datetime", "boolean"
-    Name     string // Attribute key/name
-    Size     int    // Maximum size (for string/email attributes)
-    Required bool   // Whether the attribute is required
-    Default  string // Default value
-    Array    bool   // Whether the attribute is an array
-    Encrypt  bool   // Whether to encrypt the attribute (string only)
-    Min      int    // Minimum value (for integer attributes)
-    Max      int    // Maximum value (for integer attributes)
-}
-```
-
-### Supported Attribute Types
-
-- **string**: Text attributes with configurable size, encryption, and array support
-  - `Size`: Maximum character length (required)
-  - `Encrypt`: Enable encryption at rest (optional)
-  - `Default`: Default string value (optional)
-  
-- **email**: Email validation attributes with array support
-  - `Size`: Maximum character length (required)
-  - `Default`: Default email value (optional)
-  
-- **integer**: Integer attributes with configurable min/max constraints and array support
-  - `Min`: Minimum allowed value (optional, 0 = no constraint)
-  - `Max`: Maximum allowed value (optional, 0 = no constraint)
-  - `Default`: Default integer value as string (optional)
-  
-- **datetime**: Date and time attributes with default values and array support
-  - `Default`: Default datetime value in ISO 8601 format (optional)
-  
-- **boolean**: Boolean (true/false) attributes with default values and array support
-  - `Default`: Default boolean value as string "true" or "false" (optional)
-
-**Common Configuration Options:**
-- `Required`: Whether the attribute must have a value (all types)
-- `Array`: Whether the attribute stores multiple values as an array (all types)
+**Common Fields**: `Type`, `Name`, `Required`, `Default`, `Array`
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `APPWRITE_ENDPOINT_URL` | Your Appwrite server endpoint URL | Yes |
-| `APPWRITE_PROJECT_ID` | Your Appwrite project ID | Yes |
-| `APPWRITE_API_KEY_APPRES` | API key with appropriate permissions | Yes |
-
-## Error Handling
-
-All functions return appropriate errors that should be handled:
-
-```go
-db, err := app.CreateDatabase("test-db")
-if err != nil {
-    log.Printf("Failed to create database: %v", err)
-    return
-}
-```
-
-The package also provides detailed logging for debugging purposes.
+| Variable | Description |
+|----------|-------------|
+| `APPWRITE_ENDPOINT_URL` | Your Appwrite server endpoint URL |
+| `APPWRITE_PROJECT_ID` | Your Appwrite project ID |
+| `APPWRITE_API_KEY_APPRES` | API key with Database and Storage permissions |
 
 ## Requirements
 
 - Go 1.22.5 or later
-- Active Appwrite server instance
-- Valid API key with database creation permissions
+- Active Appwrite server instance  
+- Valid API key with appropriate permissions
 
 ## License
 
-This project is licensed under the terms included in the LICENSE file.
+Licensed under the terms in the LICENSE file.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions welcome! Please submit a Pull Request.
