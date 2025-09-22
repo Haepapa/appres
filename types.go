@@ -66,14 +66,29 @@ type AttributeType struct {
 	// If not set (0), no maximum constraint will be applied
 	Max interface{}
 
+	// The ID of the collection this relationship attribute links to.
 	RelatedCollectionID string
 
+	// The type of relationship
+	// must be one of; `oneToOne`, `oneToMany`, `manyToOne`, `manyToMany`.
+	// Reference documentation: https://appwrite.io/docs/products/databases/relationships#types
 	RelationshipType string
 
+	// Enable two-way directionality
+	// false: One-way - The relationship is only visible to one side of the relation. This is similar to a tree data structure.
+	// true:  Two-way - The relationship is visible to both sides of the relationship. This is similar to a graph data structure.
+	// Reference documentation: https://appwrite.io/docs/products/databases/relationships#directionality
 	TwoWay bool
 
+	// The key/identifier used to name the two-way relationship on the related collection side.
 	TwoWayKey string
 
+	// On delete constraint behaviour for relationship attributes
+	// must be one of; `restrict`, `cascade`, `setnull`.
+	// Restrict: If a row has at least one related row, it cannot be deleted.
+	// Cascade:	If a row has related rows, when it is deleted, the related rows are also deleted.
+	// Set null: If a row has related rows, when it is deleted, the related rows are kept with their relationship column set to null.
+	// Reference documentation: https://appwrite.io/docs/products/databases/relationships#on-delete
 	OnDelete string
 }
 
@@ -82,7 +97,7 @@ type BucketType struct {
 	Name        string
 
 	// An array of permission strings.
-	// e.g. read("any") grant read access to role "any"
+	// e.g. `read("any")` grants read access to role "any"
 	Permissions []string
 
 	// When file security is enabled, users will be able to access files for which they have been granted either File or Bucket permissions.
@@ -100,10 +115,7 @@ type BucketType struct {
 	AllowedFileExtensions []string
 
 	// Compression algorithm choosen for compression. 
-	// Can be one of:
-	// - none
-	// - gzip
-	// - zstd
+	// must be one of; `none`, `gzip`, `zstd`.
 	// For file size above 20MB compression is skipped even if it's enabled
 	Compression string
 

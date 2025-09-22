@@ -26,9 +26,9 @@ var (
 // configuration variables required for Appwrite client initialisation.
 //
 // This function reads the following environment variables:
-//   - NEXT_PUBLIC_APPWRITE_ENDPOINT: The Appwrite server endpoint URL
-//   - NEXT_PUBLIC_APPWRITE_PROJECT: The Appwrite project ID
-//   - APPWRITE_API_KEY_RESDEF: The API key with appropriate permissions
+//   - APPWRITE_ENDPOINT_URL: The Appwrite server endpoint URL
+//   - APPWRITE_PROJECT_ID: The Appwrite project ID
+//   - APPWRITE_API_KEY_APPRES: The API key with appropriate permissions
 //
 // The function will terminate the program with log.Fatalf if the .env.local file
 // cannot be loaded. Ensure the file exists in the current working directory
@@ -44,7 +44,7 @@ func Envvars() {
     }
 
     // Reference variables
-    AppwriteEndpointURL = os.Getenv("NEXT_PUBLIC_APPWRITE_ENDPOINT")
-    AppwriteProjectID = os.Getenv("NEXT_PUBLIC_APPWRITE_PROJECT")
-    AppwriteRESDEFAPIKey = os.Getenv("APPWRITE_API_KEY_RESDEF")
+    AppwriteEndpointURL = os.Getenv("APPWRITE_ENDPOINT_URL")
+    AppwriteProjectID = os.Getenv("APPWRITE_PROJECT_ID")
+    AppwriteRESDEFAPIKey = os.Getenv("APPWRITE_API_KEY_APPRES")
 }

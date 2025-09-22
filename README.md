@@ -30,9 +30,9 @@ go get github.com/Haepapa/appres
 Create a `.env.local` file in your project root with your Appwrite configuration:
 
 ```bash
-NEXT_PUBLIC_APPWRITE_ENDPOINT=https://your-appwrite-endpoint.com/v1
-NEXT_PUBLIC_APPWRITE_PROJECT=your-project-id
-APPWRITE_API_KEY_RESDEF=your-api-key #api key with all Database and Storage scopes
+APPWRITE_ENDPOINT_URL=https://your-appwrite-endpoint.com/v1
+APPWRITE_PROJECT_ID=your-project-id
+APPWRITE_API_KEY_APPRES=your-api-key #api key with all Database and Storage scopes
 ```
 
 ### 2. Import the Package
